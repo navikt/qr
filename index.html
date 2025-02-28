@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>NAV QR Kode</title>
     <link rel="icon" href="https://cdn.nav.no/personbruker/decorator-next/public/favicon.ico" sizes="any">
+    <meta name="viewport" content="width=device-width">
     <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.9.1/lib/qr-code-styling.js"></script>
 </head>
 <body>
@@ -23,11 +24,11 @@
             <input type="checkbox" id="toggle-color" name="withColor" checked>
         </div>
         <div>
-            <label for="toggle-rounded">Avrundet hjørner på QR-koden</label>
+            <label for="toggle-rounded">Avrundede hjørner</label>
             <input type="checkbox" id="toggle-rounded" name="rounded" checked>
         </div>
         <div>
-            <label for="toggle-rounded">Ekstra stor</label>
+            <label for="toggle-big">Ekstra stor</label>
             <input type="checkbox" id="toggle-big" name="rounded" autocomplete="off">
         </div>
     </div>
@@ -44,10 +45,11 @@
         font-family: sans-serif;
         display: flex;
         flex-direction: column;
-        height: 100vh;
 
-        width: 52ch;
+        max-width: 62ch;
         margin: 0 auto;
+
+        padding: 16px;
     }
 
     .settings {
@@ -76,17 +78,31 @@
 
     .toggles {
         display: flex;
-        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        gap: 12px;
         margin-top: 8px;
         margin-bottom: 8px;
     }
 
+    .toggles > div {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .toggles > div input {
+        width: 16px;
+        height: 16px;
+    }
+
     .canvas-wrapper {
-        width: 100%;
         display: flex;
         justify-content: center;
-        align-items: center;
-        margin-top: 24px;
+        margin-top: 16px;
+        padding: 8px;
+
+        overflow: auto;
     }
 
     #canvas {
@@ -96,6 +112,7 @@
 
     .buttons {
         display: flex;
+        flex-wrap: wrap;
         justify-content: center;
         gap: 8px;
         margin-top: 16px;
@@ -107,14 +124,13 @@
         border-radius: 4px;
         background-color: transparent;
         cursor: pointer;
+        min-width: 120px;
     }
 </style>
 <script type="text/javascript">
     const value = document.getElementById("qr-value");
     const color = document.getElementById("toggle-color");
     const rounded = document.getElementById("toggle-rounded");
-
-    console.log(color.checked);
 
     const qrCode = new QRCodeStyling({
         width: 300,

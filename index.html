@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NAV QR Kode</title>
+    <link rel="icon" href="https://cdn.nav.no/personbruker/decorator-next/public/favicon.ico" sizes="any">
+    <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.9.1/lib/qr-code-styling.js"></script>
+</head>
+<body>
+<div class="info">
+    <h1>Lag QR kode med Nav-logo</h1>
+    <p>Enkel liten nettside for å lage QR kode med NAV logo</p>
+</div>
+<div class="settings">
+    <h2>Innstillinger</h2>
+    <div class="value">
+        <label for="qr-value">Nettadresse</label>
+        <input type="text" id="qr-value" name="qrData" value="https://nav.no">
+    </div>
+    <div class="toggles">
+        <div>
+            <label for="toggle-color">Bruk farger</label>
+            <input type="checkbox" id="toggle-color" name="withColor" checked>
+        </div>
+        <div>
+            <label for="toggle-rounded">Avrundet hjørner på QR-koden</label>
+            <input type="checkbox" id="toggle-rounded" name="rounded" checked>
+        </div>
+        <div>
+            <label for="toggle-rounded">Ekstra stor</label>
+            <input type="checkbox" id="toggle-big" name="rounded" autocomplete="off">
+        </div>
+    </div>
+</div>
+<div class="canvas-wrapper">
+    <div id="canvas"></div>
+</div>
+<div class="buttons">
+    <button id="download-svg">Last ned QR som SVG</button>
+    <button id="download-png">Last ned QR som PNG</button>
+</div>
+<style>
+    body {
+        font-family: sans-serif;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+
+        width: 52ch;
+        margin: 0 auto;
+    }
+
+    .settings {
+        width: 100%;
+    }
+
+    .settings h2 {
+        margin-bottom: 4px;
+    }
+
+    .value {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .value input {
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+
+    .value label {
+        margin-bottom: 4px;
+    }
+
+    .toggles {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+
+    .canvas-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 24px;
+    }
+
+    #canvas {
+        width: 300px;
+        height: 300px;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 16px;
+    }
+
+    .buttons button {
+        padding: 8px 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: transparent;
+        cursor: pointer;
+    }
+</style>
+<script type="text/javascript">
+    const value = document.getElementById("qr-value");
+    const color = document.getElementById("toggle-color");
+    const rounded = document.getElementById("toggle-rounded");
+
+    console.log(color.checked);
+
+    const qrCode = new QRCodeStyling({
+        width: 300,
+        height: 300,
+        type: "svg",
+        data: value.value,
+        image: color.checked ? "./logo.svg" : "./logo-black.svg",
+        dotsOptions: {
+            color: color.checked ? "#C30000" : "#000",
+            type: rounded.checked ? "rounded" : "square"
+        },
+        backgroundOptions: {
+            color: "#fff",
+        },
+        imageOptions: {
+            margin: 4
+        }
+    });
+
+    qrCode.append(document.getElementById("canvas"));
+
+    document.getElementById("download-svg").addEventListener("click", () => {
+        qrCode.download({name: "nav-qr", extension: "svg"});
+    });
+
+    document.getElementById("download-png").addEventListener("click", () => {
+        qrCode.download({name: "nav-qr", extension: "png"});
+    });
+
+    document.getElementById("toggle-color").addEventListener("change", () => {
+        qrCode.update({
+            image: color.checked ? "./logo.svg" : "./logo-black.svg",
+            dotsOptions: {
+                color: color.checked ? "#C30000" : "#000"
+            },
+            backgroundOptions: {
+                color: color.checked ? "#e9ebee" : "#fff",
+            }
+        });
+    });
+
+    document.getElementById("toggle-rounded").addEventListener("change", () => {
+        qrCode.update({
+            dotsOptions: {
+                type: rounded.checked ? "rounded" : "square"
+            }
+        });
+    });
+
+    document.getElementById("qr-value").addEventListener("input", () => {
+        qrCode.update({
+            data: value.value
+        });
+    });
+
+    document.getElementById("toggle-big").addEventListener("change", (event) => {
+        const targetSize = event.target.checked ? 500 : 300;
+        const canvasRef = document.getElementById("canvas");
+        canvasRef.style.width = `${targetSize}px`;
+        canvasRef.style.height = `${targetSize}px`;
+
+        qrCode.update({
+            width: targetSize,
+            height: targetSize
+        });
+    });
+</script>
+</body>
+</html>
